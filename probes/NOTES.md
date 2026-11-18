@@ -43,3 +43,18 @@ FPS preset also set: image_enhancement 000→002, brightness 100→090, sharpnes
 
 Batch above: full 80-code diff vs pre-batch snapshot was empty afterwards.
 Not yet write-tested (can blank/switch the screen): input, kvm, power, pip/pbp, auto_scan, hdmi_cec.
+| auto_scan  | on → off → on     | accepted, read back matched |
+| hdmi_cec   | off → on → off    | accepted, read back matched |
+| power_button | off → standby → off | accepted, read back matched |
+| pip_size   | medium → large → medium (while pip on) | accepted, read back matched |
+| pip_position | left_top → right_bottom → left_top (while pip on) | accepted, read back matched |
+| pip        | off → pip → off   | accepted, BUT SIDE EFFECT: enabling PiP reset brightness 70→100, response_time fast→normal, free_sync 1→0, zero_latency 1→0; turning PiP off did NOT restore them. frequency read 000 briefly, recovered. |
+
+PiP side effect: a GUI must snapshot settings before enabling PiP/PbP and restore them after. free_sync (00280) and
+zero_latency (00290) were restored via OSD, not USB: msigd notes a 00280 write on MAG321CURV hung the monitor.
+| input      | dp → hdmi1 → dp   | accepted, read back matched; screen blank ~5 s, DP-3 reconnected |
+| kvm        | auto → upstream → auto | accepted, read back matched; monitor HID + C920 stayed on the bus |
+
+NEVER write kvm=type_c from this PC: the monitor's HID control device sits on the monitor's USB hub and would
+disconnect, leaving no way to switch back over USB (OSD only).
+Writes verified for every MAG323UPF setting we expose except pbp_input/pip_input and refresh/alarm overlays.
