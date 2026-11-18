@@ -27,3 +27,19 @@ FPS preset also set: image_enhancement 000→002, brightness 100→090, sharpnes
 
 00180 quick_charge, 001f alarm4x, 00460 gray_level, 00480 low_blue_light (timeout);
 00650–00690 toggle_display / sound / pbp_input1-3, 00840 reset (56006 on read).
+
+## Write tests (msigd built with ro=false locally)
+
+| Setting    | Write             | Result |
+|------------|-------------------|--------|
+| brightness | 70 → 60 → 70      | accepted (5600+), read back matched both times |
+| game_mode  | user → fps → user | accepted; fps applied preset (brightness 90, sharpness 2, image_enhancement 2, night_vision ai); back to user restored all 80 codes exactly |
+| night_vision | off → normal → off | accepted, read back matched |
+| smart_crosshair_icon | off → icon1 → off | accepted, read back matched |
+| smart_crosshair_color | red → white → red | accepted, read back matched |
+| contrast   | 70 → 60 → 70      | accepted, read back matched |
+| response_time | fast → normal → fast | accepted, read back matched |
+| eye_saver  | off → on → off    | accepted, read back matched |
+
+Batch above: full 80-code diff vs pre-batch snapshot was empty afterwards.
+Not yet write-tested (can blank/switch the screen): input, kvm, power, pip/pbp, auto_scan, hdmi_cec.
