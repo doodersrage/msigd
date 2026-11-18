@@ -1,0 +1,33 @@
+# Builds msigd from this source checkout (doodersrage fork, adds MSI MAG323UPF):  makepkg -si
+pkgname=msigd
+pkgver=r202
+pkgrel=1
+pkgdesc="Query and set MSI monitor OSD settings over USB (fork with MAG323UPF support)"
+arch=('x86_64')
+url="https://github.com/doodersrage/msigd"
+license=('GPL-2.0-only')
+depends=('hidapi' 'libusb' 'gcc-libs' 'glibc')
+provides=('msigd')
+conflicts=('msigd-git')
+
+_src() { cd "$startdir/../.."; }
+
+pkgver() {
+  _src
+  printf "r%s" "$(git rev-list --count HEAD)"
+}
+
+build() {
+  _src
+  make TARGETOS=arch
+}
+
+package() {
+  _src
+  install -Dm755 msigd "$pkgdir/usr/bin/msigd"
+  install -Dm644 man/msigd.1 "$pkgdir/usr/share/man/man1/msigd.1"
+  # Arch has no plugdev group; uaccess grants the logged-in user access.
+  sed 's/GROUP="plugdev", //' udev/51-msi-gaming-device.rules \
+    | install -Dm644 /dev/stdin "$pkgdir/usr/lib/udev/rules.d/51-msi-gaming-device.rules"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
