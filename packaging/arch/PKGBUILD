@@ -1,6 +1,6 @@
 # Builds msigd from this source checkout (doodersrage fork, adds MSI MAG323UPF):  makepkg -si
 pkgname=msigd
-pkgver=r202
+pkgver=r203
 pkgrel=1
 pkgdesc="Query and set MSI monitor OSD settings over USB (fork with MAG323UPF support)"
 arch=('x86_64')
